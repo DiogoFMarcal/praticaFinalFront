@@ -1,0 +1,134 @@
+<div class="row">
+    <div class="col-10">
+        <h3>Profile</h3>
+    </div>
+    <div class="col-2">
+        <div class="float-end">
+            <button type="button" (click)="openChangePasswordModal()" class="btn orangeBtn">Change password</button>
+        </div>
+    </div>
+
+</div>
+<div class="card p-4">
+    <form [formGroup]="editUserForm" (ngSubmit)="editUser()">
+
+        <!-- Name input -->
+        <div class="form-outline mb-4">
+            <label class="form-label" for="name">Name</label>
+            <input type="text" id="name" class="form-control" formControlName="name" />
+
+            <span *ngIf="isValidField('name', editUserForm)" class="form-text text-danger">
+                {{ getFieldError('name', editUserForm) }}
+            </span>
+        </div>
+
+        <!-- Surnames input -->
+        <div class="form-outline mb-4">
+            <label class="form-label" for="surnames">Surnames</label>
+            <input type="text" id="surnames" class="form-control" formControlName="surnames" />
+
+            <span *ngIf="isValidField('surnames', editUserForm)" class="form-text text-danger">
+                {{ getFieldError('surnames', editUserForm) }}
+            </span>
+        </div>
+
+        <div class="form-outline mb-4">
+            <label class="form-label" for="country">Country</label>
+            <select id="country" class="form-select" formControlName="country">
+                <option hidden [value]=""> - </option>
+                <option *ngFor="let country of countries" [value]="country.countryName">{{country.countryName}}</option>
+            </select>
+
+            <span *ngIf="isValidField('country', editUserForm)" class="form-text text-danger">
+                {{ getFieldError('country', editUserForm) }}
+            </span>
+        </div>
+
+
+        <!-- city input -->
+        <div class="form-outline mb-4">
+            <label class="form-label" for="city">City</label>
+            <input type="text" id="city" class="form-control" formControlName="city" />
+
+            <span *ngIf="isValidField('city', editUserForm)" class="form-text text-danger">
+                {{ getFieldError('city', editUserForm) }}
+            </span>
+        </div>
+
+        <!-- address input -->
+        <div class="form-outline mb-4">
+            <label class="form-label" for="adress">Adress</label>
+            <input type="text" id="adress" class="form-control" formControlName="address" />
+
+            <span *ngIf="isValidField('address', editUserForm)" class="form-text text-danger">
+                {{ getFieldError('address', editUserForm) }}
+            </span>
+        </div>
+
+        <!-- iban input -->
+        <div class="form-outline mb-4">
+            <label class="form-label" for="iban">IBAN</label>
+            <input type="text" id="iban" class="form-control" formControlName="iban" />
+
+            <span *ngIf="isValidField('iban', editUserForm)" class="form-text text-danger">
+                {{ getFieldError('iban', editUserForm) }}
+            </span>
+        </div>
+
+        <!-- Email input -->
+        <div class="form-outline mb-4">
+            <label class="form-label" for="form2Example1">Email address</label>
+            <input type="email" id="form2Example1" class="form-control" formControlName="email" />
+
+            <span *ngIf="isValidField('email', editUserForm)" class="form-text text-danger">
+                {{ getFieldError('email', editUserForm) }}
+            </span>
+        </div>
+
+        <!-- Cancel button -->
+        <div class="center-block">
+            <a href="/myApp/dashboard" type="button" class="btn cancelBtn">Cancel</a>
+
+            <!-- Submit button -->
+            <button type="submit" class="btn orangeBtn mx-3">Edit Profile</button>
+        </div>
+    </form>
+</div>
+
+<!-- ############################################################################################# -->
+<!-- Modal for take with its form -->
+
+<div class="card flex justify-content-center">
+    <p-dialog header="Change Password" [(visible)]="showChangePasswordModal" [style]="{width: '50vw'}"
+        (onHide)="closeChangePasswordModal()">
+        <form [formGroup]="changePasswordForm" (ngSubmit)="changePassword()">
+            <div class="form-outline mb-4">
+                <label class="form-label" for="oldPassword">Old Password</label>
+                <input type="password" id="oldPassword" class="form-control" formControlName="oldPassword" />
+
+                <span *ngIf="isValidField('oldPassword', changePasswordForm)" class="form-text text-danger">
+                    {{ getFieldError('oldPassword', changePasswordForm)}}
+                </span>
+
+            </div>
+
+            <div class="form-outline mb-4">
+                <label class="form-label" for="newPassword">New Password</label>
+                <input type="password" id="newPassword" class="form-control" formControlName="newPassword" />
+
+                <span *ngIf="isValidField('newPassword', changePasswordForm)" class="form-text text-danger">
+                    {{ getFieldError('newPassword', changePasswordForm)}}
+                </span>
+            </div>
+            <div class="mt-3">
+                <button type="button" (click)="closeChangePasswordModal()" class="btn cancelBtn ">Cancel</button>
+                <button type="submit" class="btn orangeBtn mx-3">Change Password</button>
+            </div>
+        </form>
+    </p-dialog>
+</div>
+
+<!-- toast for sucess -->
+<div class="card flex justify-content-center gap-2">
+    <p-toast position="top-center"></p-toast>
+</div>

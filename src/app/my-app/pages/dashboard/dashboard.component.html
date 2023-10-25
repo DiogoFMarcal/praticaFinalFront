@@ -1,0 +1,223 @@
+<div class="row">
+    <h3>Dashboard</h3>
+</div>
+
+<div class="card p-3">
+    <table class="table">
+        <thead>
+            <tr>
+                <th scope="col"></th>
+
+                <th scope="col">
+                    <b>
+                        <h5>Quantity</h5>
+                    </b>
+                </th>
+
+                <th scope="col">
+                    <b>
+                        <h5>Value</h5>
+                    </b>
+                </th>
+
+                <th scope="col">
+                    <b>
+                        <h5>Actions</h5>
+                    </b>
+                </th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr *ngFor="let we of userWalletEntries">
+
+                <td>
+                    <b>
+                        <h5 *ngIf="we.coin.name !== 'Euro'">
+                            <a [routerLink]="['/myApp/coinDetails', we.coin.id]">{{we.coin.name}}</a>
+                        </h5>
+                        <h5 *ngIf="we.coin.name === 'Euro'">Euro</h5>
+                    </b>
+                </td>
+
+                <td>
+                    <div *ngIf="we.coin.name !== 'Euro'">
+                        {{we.quantity}}
+                    </div>
+                </td>
+
+                <td>
+                    <div *ngIf="we.coin.name === 'Euro'">
+                        {{we.quantity | toCurrency: true}}
+                    </div>
+
+                    <div *ngIf="we.coin.name !== 'Euro'">
+                        1 {{we.coin.name}} = {{we.coin.quoteForEuro | toCurrency: true}} <br>
+                        <div *ngIf="we.quantity !== 0">
+                            Total: {{we.quantity*we.coin.quoteForEuro | toCurrency: true}}
+                        </div>
+                    </div>
+                </td>
+
+                <td>
+                    <!-- place for buttons -->
+                    <div *ngIf="we.coin.name === 'Euro'">
+                        <button type="button" (click)="openDepositModal()" class="btn orangeBtn">Deposit</button>
+                        <button type="button" class="btn orangeBtn mx-2" (click)="openTakeModal()">Take</button>
+                    </div>
+                    <div *ngIf="we.coin.name !== 'Euro'">
+                        <button type="button" class="btn orangeBtn" (click)="openBuyModal(we.coin.name)">Buy</button>
+                        <button *ngIf="we.quantity !== 0" type="button" class="btn orangeBtn mx-2"
+                            (click)="openSellModal(we.coin.name)">Sell</button>
+                    </div>
+                </td>
+
+            </tr>
+
+            <tr>
+                <!-- row to display the total amount of monet invested in crypo coins plus the amount of euros  -->
+                <td class="orangeText">
+                    <h4>Total</h4>
+                </td>
+                <td></td>
+                <td class="orangeText">
+                    <h4>{{calculateTotal() | toCurrency: true}}</h4>
+                </td>
+                <td></td>
+            </tr>
+
+        </tbody>
+    </table>
+</div>
+
+<!-- ############################################################################################# -->
+<!-- Modal to deposit with its form -->
+
+<div class="flex justify-content-center">
+
+    <p-dialog header="Deposit" [(visible)]="showDepositModal" [style]="{width: '50vw'}" (onHide)="closeDepositModal()">
+        <form [formGroup]="depositForm" (ngSubmit)="submitDeposit()">
+            <div class="form-outline mb-4">
+                <label class="form-label" for="sourceIban">Source Iban</label>
+                <input type="text" id="sourceIban" class="form-control" formControlName="sourceIban" />
+
+                <span *ngIf="isValidField('sourceIban', depositForm)" class="form-text text-danger">
+                    {{ getFieldError('sourceIban', depositForm)}}
+                </span>
+            </div>
+
+            <div class="form-outline mb-4">
+                <label class="form-label" for="depositValue">Value(€)</label>
+                <input type="number" id="depositValue" class="form-control" formControlName="depositValue" />
+
+                <span *ngIf="isValidField('depositValue', depositForm)" class="form-text text-danger">
+                    {{ getFieldError('depositValue', depositForm)}}
+                </span>
+            </div>
+
+            <div class="mt-3">
+                <button type="button" (click)="closeDepositModal()" class="btn cancelBtn ">Cancel</button>
+                <button type="submit" class="btn orangeBtn mx-3">Deposit</button>
+            </div>
+        </form>
+    </p-dialog>
+</div>
+
+<!-- ############################################################################################# -->
+<!-- Modal for take with its form -->
+
+<div class="flex justify-content-center">
+    <p-dialog header="Take" [(visible)]="showTakeModal" [style]="{width: '50vw'}" (onHide)="closeTakeModal()">
+        <form [formGroup]="takeForm" (ngSubmit)="submitTake()">
+            <div class="form-outline mb-4">
+                <label class="form-label" for="destinationIban">Destination Iban</label>
+                <input type="text" id="destinationIban" class="form-control" formControlName="destinationIban" />
+
+                <span *ngIf="isValidField('destinationIban', takeForm)" class="form-text text-danger">
+                    {{ getFieldError('destinationIban', takeForm)}}
+                </span>
+            </div>
+
+            <div class="form-outline mb-4">
+                <label class="form-label" for="takeValue">Value(€)</label>
+                <input type="number" id="takeValue" class="form-control" formControlName="takeValue" />
+
+                <span *ngIf="isValidField('takeValue', takeForm)" class="form-text text-danger">
+                    {{ getFieldError('takeValue', takeForm)}}
+                </span>
+            </div>
+
+            <div class="mt-3">
+                <button type="button" (click)="closeTakeModal()" class="btn cancelBtn ">Cancel</button>
+                <button type="submit" class="btn orangeBtn mx-3">Take</button>
+            </div>
+        </form>
+    </p-dialog>
+</div>
+
+<!-- ############################################################################################# -->
+<!-- Modal for buy a quantity of a coin with its form -->
+
+<div class="flex justify-content-center">
+    <p-dialog header="Buy" [(visible)]="showBuyModal" [style]="{width: '50vw'}" (onHide)="closeBuyModal()">
+        <form [formGroup]="buyForm" (ngSubmit)="submitBuy()">
+
+
+            <div class="form-outline mb-4">
+                <label class="form-label" for="amount">Amount of {{selectedCoinNametoBuy}}</label>
+                <input type="number" id="amount" class="form-control" formControlName="amount" />
+
+                <span *ngIf="isValidField('amount', buyForm)" class="form-text text-danger">
+                    {{ getFieldError('amount', buyForm)}}
+                </span>
+            </div>
+
+            <div class="form-outline mb-4">
+                <span *ngIf="getValueOfAmountToBuy(selectedCoinNametoBuy) > 0" class="form-text">
+                    Cost in Euros (€): {{ getValueOfAmountToBuy(selectedCoinNametoBuy)| toCurrency:true }}
+                </span>
+            </div>
+
+            <div class="mt-3">
+                <button type="button" (click)="closeBuyModal()" class="btn cancelBtn ">Cancel</button>
+                <button type="submit" class="btn orangeBtn mx-3">Buy</button>
+            </div>
+        </form>
+    </p-dialog>
+</div>
+
+<!-- ############################################################################################# -->
+<!-- Modal for sell a quantity of a coin with its form -->
+
+<div class="flex justify-content-center">
+    <p-dialog header="Sell" [(visible)]="showSellModal" [style]="{width: '50vw'}" (onHide)="closeSellModal()">
+        <form [formGroup]="sellForm" (ngSubmit)="submitSell()">
+
+            <div class="form-outline mb-4">
+                <label class="form-label" for="amount">Amount of {{selectedCoinNametoSell}}</label>
+                <input type="number" id="amount" class="form-control" formControlName="amount" />
+
+                <span *ngIf="isValidField('amount', sellForm)" class="form-text text-danger">
+                    {{ getFieldError('amount', sellForm)}}
+                </span>
+
+            </div>
+
+            <div class="form-outline mb-4">
+                <span *ngIf="getValueOfAmountToSell(selectedCoinNametoSell) > 0" class="form-text">
+                    Cost in Euros (€): {{ getValueOfAmountToSell(selectedCoinNametoSell)| toCurrency:true }}
+                </span>
+            </div>
+
+            <div class="mt-3">
+                <button type="button" (click)="closeSellModal()" class="btn cancelBtn ">Cancel</button>
+                <button type="submit" class="btn orangeBtn mx-3">Sell</button>
+            </div>
+        </form>
+    </p-dialog>
+</div>
+
+<!-- ############################################################################################# -->
+<!-- toast for sucess -->
+<div class="card flex justify-content-center gap-2">
+    <p-toast position="top-center"></p-toast>
+</div>

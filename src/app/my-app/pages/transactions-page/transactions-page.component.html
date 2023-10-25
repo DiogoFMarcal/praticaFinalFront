@@ -1,0 +1,101 @@
+<h3>My transactions</h3>
+
+<div class="my-4 row card p-2">
+
+    <!-- transaction filter fields inside a form -->
+    <form [formGroup]="filterForm" (ngSubmit)="filter()">
+
+        <div class="container">
+            <div class="row">
+                <div class="col-3 mr-3">
+                    <label class="form-label" for="sourceCoin">Source coin</label>
+                    <select class="form-select mb-3" id="sourceCoin" formControlName="sourceCoinName">
+                        <option hidden></option>
+                        <option *ngFor="let coin of coins">{{coin.name}}</option>
+                    </select>
+
+                    <label class="form-label" for="destinationCoin">Destination coin</label>
+                    <select class="form-select" id="destinationCoin" formControlName="destinationCoinName">
+                        <option hidden></option>
+                        <option *ngFor="let coin of coins">{{coin.name}}</option>
+                    </select>
+                </div>
+
+                <div class="col-3 mr-3">
+                    <label class="form-label" for="startSearchDate">Start date</label>
+                    <span class="text-danger" *ngIf="showInvalidStartSearchDate">
+                        *Invalid start date.
+                    </span>
+                    <input type="date" class="form-control mb-3" id="startSearchDate" formControlName="startSearchDate">
+
+                    <label class="form-label" for="endSearchDate">End date</label>
+                    <input type="date" class="form-control" id="endSearchDate" formControlName="endSearchDate">
+                </div>
+
+                <div class="col-3 mr-3">
+                    <label class="form-label" for="startSearchDate">Operation type</label>
+                    <select class="form-select mb-4" formControlName="operationType">
+                        <option hidden></option>
+                        <option *ngFor="let otLabel of operationTypeLabels">{{otLabel}}</option>
+                    </select>
+                </div>
+
+                <div class="col-3 mt-4">
+
+                    <div class="row">
+                        <div class="text-center">
+                            <button type="button" id="btnFilter" (click)="clearFilter()"
+                                class="btn cancelBtn">Clear</button>
+                        </div>
+                    </div>
+                    <div class="row mt-3">
+                        <div class="text-center">
+                            <button type="submit" id="btnFilter" class="btn orangeBtn">Filter</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </form>
+</div>
+
+<div class="my-4 row card p-2">
+    <table class="table">
+        <thead>
+            <tr>
+
+                <th scope="col"><b>
+                        <h5>Operation type</h5>
+                    </b></th>
+                <th scope="col"><b>
+                        <h5>Date</h5>
+                    </b></th>
+                <th scope="col"><b>
+                        <h5>Source coin</h5>
+                    </b></th>
+                <th scope="col"><b>
+                        <h5>Destination coin</h5>
+                    </b></th>
+                <th scope="col"><b>
+                        <h5>Amount (€)</h5>
+                    </b></th>
+
+            </tr>
+        </thead>
+        <tbody>
+            <tr *ngFor="let transaction of transactions">
+                <td>{{transaction.operationType}}</td>
+                <td>{{transaction.date | date:'dd/MM/yyyy'}}</td>
+                <td>{{transaction.sourceCoin}}</td>
+                <td>{{transaction.destinationCoin}}</td>
+                <td>{{transaction.amountInEuros | toCurrency: true}}</td>
+            </tr>
+
+            <tr *ngIf="transactions.length === 0">
+                <td colspan="5">
+                    <h6 class="text-center"> No transactions to show. </h6>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+</div>

@@ -1,0 +1,109 @@
+<h3>Details for {{coinForDetails.name}}</h3>
+<div class="card p-3">
+    <div class="row">
+        <div class="col-9">
+            <p> <b>Coin name: </b> {{coinForDetails.name}}</p>
+
+            <p> <b>Current quote for euro: </b> 1 {{coinForDetails.name}} = {{coinForDetails.quoteForEuro | toCurrency:
+                true}} </p>
+
+            <p> <b>Current quantity in wallet: </b> {{currWalletEntry.quantity}} </p>
+
+            <p> <b>Current value in wallet: </b> {{ (currWalletEntry.quantity || 0) * (coinForDetails.quoteForEuro
+                || 0) | toCurrency: true}} </p>
+        </div>
+        <div class="col-3" *ngIf="coinForDetails?.name != 'Euro'">
+            <div class="row mt-3">
+                <div class="text-center">
+                    <button type="button" id="btnFilter" class="btn orangeBtn" style="width: 200px;"
+                        (click)="openBuyModal()">Buy</button>
+                </div>
+            </div>
+            <div class="row mt-3">
+                <div class="text-center">
+                    <button type="button" id="btnFilter" class="btn orangeBtn" style="width: 200px;"
+                        (click)="openSellModal()">Sell</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+</div>
+
+<div class="card p-3 mt-3">
+    <div *ngIf="purchaseTransactions.length !==0">
+        <h5 class="card-title">Value of last purchases</h5>
+        <p-chart type="line" [data]="data" [options]="options"></p-chart>
+    </div>
+    <div *ngIf="purchaseTransactions.length ===0" class="text-center">
+        <h5 class="card-title">No purchase transactions to show.</h5>
+
+    </div>
+</div>
+
+<!-- ############################################################################################# -->
+<!-- Modal to buy a quantity of a coin with its form -->
+
+<div class="flex justify-content-center">
+    <p-dialog header="Buy" [(visible)]="showBuyModal" [style]="{width: '50vw'}" (onHide)="closeBuyModal()">
+        <form [formGroup]="buyForm" (ngSubmit)="submitBuy()">
+
+
+            <div class="form-outline mb-4">
+                <label class="form-label" for="amount">Amount of {{coinForDetails.name}}</label>
+                <input type="number" id="amount" class="form-control" formControlName="amount" />
+
+                <span *ngIf="isValidField('amount', buyForm)" class="form-text text-danger">
+                    {{ getFieldError('amount', buyForm)}}
+                </span>
+            </div>
+
+            <div class="form-outline mb-4">
+                <span *ngIf="getValueOfAmountToBuy() > 0" class="form-text">
+                    Cost in Euros (€): {{ getValueOfAmountToBuy()| toCurrency:true }}
+                </span>
+            </div>
+
+            <div class="mt-3">
+                <button type="button" (click)="closeBuyModal()" class="btn cancelBtn ">Cancel</button>
+                <button type="submit" class="btn orangeBtn mx-3">Buy</button>
+            </div>
+        </form>
+    </p-dialog>
+</div>
+
+<!-- ############################################################################################# -->
+<!-- Modal for sell a quantity of a coin with its form -->
+
+<div class="flex justify-content-center">
+    <p-dialog header="Sell" [(visible)]="showSellModal" [style]="{width: '50vw'}" (onHide)="closeSellModal()">
+        <form [formGroup]="sellForm" (ngSubmit)="submitSell()">
+
+            <div class="form-outline mb-4">
+                <label class="form-label" for="amount">Amount of {{coinForDetails.name}}</label>
+                <input type="number" id="amount" class="form-control" formControlName="amount" />
+
+                <span *ngIf="isValidField('amount', sellForm)" class="form-text text-danger">
+                    {{ getFieldError('amount', sellForm)}}
+                </span>
+            </div>
+
+            <div class="form-outline mb-4">
+                <span *ngIf="getValueOfAmountToSell() > 0" class="form-text">
+                    Cost in Euros (€): {{ getValueOfAmountToSell()| toCurrency:true }}
+                </span>
+            </div>
+
+            <div class="mt-3">
+                <button type="button" (click)="closeSellModal()" class="btn cancelBtn ">Cancel</button>
+                <button type="submit" class="btn orangeBtn mx-3">Sell</button>
+            </div>
+        </form>
+    </p-dialog>
+</div>
+
+<!-- ############################################################################################# -->
+<!-- toast for sucess -->
+<div class="card flex justify-content-center gap-2">
+    <p-toast position="top-center"></p-toast>
+</div>

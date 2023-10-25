@@ -1,0 +1,99 @@
+<h3>Register</h3>
+<div class="card p-4">
+    <form [formGroup]="registerForm" (ngSubmit)="register()">
+
+        <!-- Name input -->
+        <div class="form-outline mb-4">
+            <label class="form-label" for="name">Name</label>
+            <input type="text" id="name" class="form-control" formControlName="name" />
+
+            <span *ngIf="isValidField('name')" class="form-text text-danger">
+                {{ getFieldError('name') }}
+            </span>
+        </div>
+
+        <!-- Surnames input -->
+        <div class="form-outline mb-4">
+            <label class="form-label" for="surnames">Surnames</label>
+            <input type="text" id="surnames" class="form-control" formControlName="surnames" />
+
+            <span *ngIf="isValidField('surnames')" class="form-text text-danger">
+                {{ getFieldError('surnames') }}
+            </span>
+        </div>
+
+        <div class="form-outline mb-4">
+            <label class="form-label" for="country">Country</label>
+            <select id="country" class="form-select" formControlName="country">
+                <option hidden [value]=""> - </option>
+                <option *ngFor="let country of countries" [value]="country.countryName">{{country.countryName}}</option>
+            </select>
+
+            <span *ngIf="isValidField('country')" class="form-text text-danger">
+                {{ getFieldError('country') }}
+            </span>
+        </div>
+
+        <!-- city input -->
+        <div class="form-outline mb-4">
+            <label class="form-label" for="city">City</label>
+            <input type="text" id="city" class="form-control" formControlName="city" />
+
+            <span *ngIf="isValidField('city')" class="form-text text-danger">
+                {{ getFieldError('city') }}
+            </span>
+        </div>
+
+        <!-- address input -->
+        <div class="form-outline mb-4">
+            <label class="form-label" for="adress">Adress</label>
+            <input type="text" id="adress" class="form-control" formControlName="address" />
+
+            <span *ngIf="isValidField('address')" class="form-text text-danger">
+                {{ getFieldError('address') }}
+            </span>
+        </div>
+
+        <!-- iban input -->
+        <div class="form-outline mb-4">
+            <label class="form-label" for="iban">IBAN</label>
+            <input type="text" id="iban" class="form-control" formControlName="iban" />
+
+            <span *ngIf="isValidField('iban')" class="form-text text-danger">
+                {{ getFieldError('iban') }}
+            </span>
+        </div>
+
+        <!-- Email input -->
+        <div class="form-outline mb-4">
+            <label class="form-label" for="form2Example1">Email address</label>
+            <input type="email" id="form2Example1" class="form-control" formControlName="email" />
+
+            <span *ngIf="isValidField('email')" class="form-text text-danger">
+                {{ getFieldError('email') }}
+            </span>
+        </div>
+
+        <!-- Password input -->
+        <div class="form-outline mb-4">
+            <label class="form-label" for="form2Example2">Password</label>
+            <input type="password" id="password" class="form-control" formControlName="password" />
+
+            <span *ngIf="isValidField('password')" class="form-text text-danger">
+                {{ getFieldError('password') }}
+            </span>
+        </div>
+
+        <!-- submit button -->
+        <div class="row ">
+            <div class="text-center">
+                <button type="submit" class="btn orangeBtn" style="width: 200px;">Register</button>
+            </div>
+        </div>
+
+        <!-- link for login form -->
+        <div class="text-center mt-3">
+            <p>Already registered? <a href="/">Login</a></p>
+        </div>
+    </form>
+</div>

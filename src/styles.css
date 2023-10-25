@@ -1,0 +1,37 @@
+/* You can add global styles to this file, and also import other style files */
+@import "primeng/resources/themes/lara-light-blue/theme.css";
+@import "primeng/resources/primeng.css";
+@import "primeicons/primeicons.css";
+
+.orangeText {
+    color: #F28C28	;
+}
+
+.orangeBtn {
+    background-color: #F28C28;
+    color: white;
+    box-shadow: 2px 2px 4px rgba(0, 0, 0, 0.2);
+}
+
+.orangeBtn:hover {
+    background-color: #F28C28;
+    color: white;
+    box-shadow: 2px 2px 4px rgba(0, 0, 0, 0.2);
+}
+
+
+.cancelBtn {
+    color: #F28C28;
+    border: 1px solid #F28C28;
+}
+
+.cancelBtn:hover {
+    color: #F28C28;
+    border: 1px solid #F28C28;
+    box-shadow: 2px 2px 4px rgba(0, 0, 0, 0.2);
+}
+
+.cancelBtn:active {
+    color: black;
+    border: 1px solid black;
+}
